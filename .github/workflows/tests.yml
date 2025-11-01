@@ -1,0 +1,108 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip packages
+      uses: actions/cache@v4
+      with:
+        path: ~\AppData\Local\pip\Cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install -r correX/requirements.txt
+        pip install pytest pytest-cov pytest-mock
+    
+    - name: Run tests with coverage
+      run: |
+        pytest tests/ --cov=correX --cov-report=xml --cov-report=term-missing -v
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-${{ matrix.python-version }}
+        fail_ci_if_error: false
+
+  lint:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install linting tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install black flake8 mypy
+    
+    - name: Check code formatting with Black
+      run: |
+        black --check correX/ tests/
+    
+    - name: Lint with Flake8
+      run: |
+        flake8 correX/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 correX/ tests/ --count --max-complexity=10 --max-line-length=100 --statistics
+    
+    - name: Type check with Mypy
+      run: |
+        mypy correX/ --ignore-missing-imports
+
+  install-test:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Test installation
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+    
+    - name: Verify installation
+      run: |
+        python -c "import correX; print(correX.__version__)"
+        correx --help
+    
+    - name: Run installation tests
+      run: |
+        pip install pytest
+        pytest test_install.py -v

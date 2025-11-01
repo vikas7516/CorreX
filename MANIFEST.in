@@ -1,0 +1,38 @@
+# MANIFEST.in - Specify additional files to include in distribution package
+
+# Documentation
+include README.md
+include LICENSE
+include QUICK_START.md
+include DEVNOTES.md
+
+# Requirements
+include correX/requirements.txt
+
+# Assets
+recursive-include assets *
+recursive-include correX/assets *
+
+# Exclude development and temporary files
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude *.so
+global-exclude .DS_Store
+global-exclude *.swp
+global-exclude *.swo
+
+# Exclude version control
+prune .git
+prune .github
+
+# Exclude IDE settings
+prune .vscode
+prune .idea
+
+# Exclude build artifacts
+prune build
+prune dist
+prune *.egg-info
+
+# Exclude test files (if any)
+prune tests

@@ -1,0 +1,167 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "correX"
+version = "1.0.0"
+description = "AI-Powered Text Correction & Voice Dictation for Windows"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "CorreX Project"}
+]
+keywords = [
+    "text-correction",
+    "autocorrect",
+    "ai",
+    "gemini",
+    "voice-dictation",
+    "speech-to-text",
+    "windows",
+    "accessibility"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Office/Business",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Environment :: Win32 (MS Windows)",
+    "Natural Language :: English",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "google-generativeai>=0.3.0",
+    "keyboard>=0.13.5",
+    "pywin32>=306",
+    "pywinauto>=0.6.8",
+    "pystray>=0.19.5",
+    "Pillow>=10.0.0",
+    "SpeechRecognition>=3.10.0",
+    "PyAudio>=0.2.13",
+    "noisereduce>=3.0.0",
+    "numpy>=1.24.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "types-Pillow",
+]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/vikas7516/CorreX"
+Documentation = "https://github.com/vikas7516/CorreX/blob/main/DEVNOTES.md"
+Repository = "https://github.com/vikas7516/CorreX"
+"Bug Reports" = "https://github.com/vikas7516/CorreX/issues"
+Changelog = "https://github.com/vikas7516/CorreX/blob/main/CHANGELOG.md"
+
+[project.scripts]
+correx = "correX.main:main"
+
+[tool.setuptools]
+packages = ["correX", "correX.gui"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+correX = [
+    "assets/**/*",
+    "assets/icons/*",
+    "*.md",
+    "requirements.txt",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "--cov=correX",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow tests",
+]
+
+[tool.coverage.run]
+source = ["correX"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
+]
+
+[tool.black]
+line-length = 120
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+files = ["correX/**/*.py"]
+
+[tool.flake8]
+max-line-length = 120
+extend-ignore = ["E203", "W503"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".eggs",
+    "*.egg",
+]

@@ -1,0 +1,10 @@
+google-generativeai>=0.3.0
+keyboard>=0.13.5
+pywin32>=306
+pywinauto>=0.6.8
+pystray>=0.19.5
+Pillow>=10.0.0
+SpeechRecognition>=3.10.0
+PyAudio>=0.2.13
+noisereduce>=3.0.0
+numpy>=1.24.0
